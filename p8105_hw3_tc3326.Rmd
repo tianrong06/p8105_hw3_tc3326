@@ -94,3 +94,38 @@ In the “Less than high school” group, physical activity decreases with age f
 In the “High school equivalent” group, middle age women generally have higher activity than middle age men. Activity decreases for women and men after age 40. 
 In the “More than high school” group, activity trends are relatively stable across age, with men and women displaying similar activity patterns throughout the lifespan. However, women tend to have slightly higher activity levels than men overall. After the age of 60, both men and women experience a gradual decrease in total activity. The decline is more gradual compared to those with lower education levels.
 
+## Make a three-panel plot that shows the 24-hour activity time courses for each education level and use color to indicate sex 
+```{r}
+merged_data <- merged_data %>%
+  pivot_longer(cols = min1:min1440, names_to = "minute", values_to = "activity") %>%
+  mutate(minute = as.numeric(gsub("min", "", minute))) %>%
+  group_by(education, sex, minute) %>%
+  summarize(mean_act = mean(activity, na.rm = TRUE), .groups = 'drop')
+```
+
+```{r}
+Hour_course_plot <- merged_data %>%
+  ggplot(aes(x = minute, y = mean_act, color = sex)) +
+  geom_line(alpha = 0.3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(.~ education) +
+  labs(
+    title = "24-Hour Activity Time Courses by Education Level and Sex",
+    x = "Minute of the Day",
+    y = "Mean Activity",
+    color = "Sex"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+print(Hour_course_plot)
+```
+Comments:
+
+Across all education levels, activity peaks in the morning (around 8 a.m.) and declines in the evening. Women generally show higher activity levels, especially in the "High school equivalent" and "More than high school" groups.
+
+Less than High School: Lower overall activity. There is a sharp peak in the morning and a steady decline throughout the day. Men show slightly higher activity than women.
+
+High School Equivalent: Higher and more sustained activity levels than the Less than High School group. Women tend to have higher activity than men, especially during mid-day.
+
+More than High School: This group has the highest activity levels throughout the day, with women consistently more active than men.
