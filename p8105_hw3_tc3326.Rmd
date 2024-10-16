@@ -129,3 +129,37 @@ Less than High School: Lower overall activity. There is a sharp peak in the morn
 High School Equivalent: Higher and more sustained activity levels than the Less than High School group. Women tend to have higher activity than men, especially during mid-day.
 
 More than High School: This group has the highest activity levels throughout the day, with women consistently more active than men.
+
+# Problem 3
+
+## Import and clean datasets
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+combined_data <- read_csv("./data/Jan 2020 Citi.csv") %>%
+  mutate(month = "jan", year = 2020) %>%
+  clean_names() %>%
+  bind_rows(
+    read_csv("./data/July 2020 Citi.csv") %>%
+      mutate(month = "jul", year = 2020) %>%
+      clean_names(),
+    read_csv("./data/Jan 2024 Citi.csv") %>%
+      mutate(month = "jan", year = 2024) %>%
+      clean_names(),
+    read_csv("./data/July 2024 Citi.csv") %>%
+      mutate(month = "jul", year = 2024) %>%
+      clean_names()
+  ) %>%
+  distinct() 
+
+obs <- combined_data %>%
+  nrow()
+summary(combined_data)
+```
+Describe the resulting dataset:
+
+The dataset contains 99,485 Citi Bike rides from January and July of 2020 and 2024. Each ride has details such as ride ID, ride duration, bike type, the day of the week, start and end station names, and whether the rider is a member or casual user. 
+
