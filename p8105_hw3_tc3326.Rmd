@@ -4,6 +4,25 @@ author: "KK Chen"
 date: "2024-10-16"
 output: github_document
 ---
+# Problem 1
+
+## write a short description of the dataset
+```{r}
+library(tidyverse)
+library(p8105.datasets)
+
+data("ny_noaa")
+
+nrow(ny_noaa)
+ncol(ny_noaa)
+
+summary(ny_noaa)
+
+na_summary <- colSums(is.na(ny_noaa))
+na_summary
+```
+This dataset contains `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Key variables include weather station id, date of observation,  (tenths of mm), precipitation (tenths of mm), snowfall (mm), snow depth (mm), and min and max daily temperature (tenths of degrees C). The dataset contains some significant missing data. There are 145,838 missing values for precipitation, 381,221 for snowfall, and 591,786 for snow depth. 
+
 
 # Problem 2
 
