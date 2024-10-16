@@ -165,7 +165,7 @@ The dataset contains 99,485 Citi Bike rides from January and July of 2020 and 20
 
 ## Produce a reader-friendly table 
 ```{r}
-combined_data <- combined_data %>%
+ride_summary <- combined_data %>%
   group_by(year, month, member_casual) %>%
   summarize(total_rides = n(), .groups = 'drop') %>%
   pivot_wider(names_from = member_casual, values_from = total_rides, values_fill = 0) %>%
@@ -173,8 +173,12 @@ combined_data <- combined_data %>%
 ```
 
 ```{r}
-print(combined_data)
+print(ride_summary)
 ```
 Comments:
 
 The table shows that Citi Bike usage is significantly higher in July compared to January, reflecting strong seasonal variation. Member riders consistently account for the majority of rides, but casual ridership also sees a notable increase during the summer. Between 2020 and 2024, there is a marked growth in both casual and member rides. It indicates the increasing popularity of the system, especially during warmer months.
+
+
+
+
