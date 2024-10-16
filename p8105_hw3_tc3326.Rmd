@@ -5,3 +5,66 @@ date: "2024-10-16"
 output: github_document
 ---
 
+# Problem 2
+
+## Import and Organize data sets
+```{r}
+library(tidyverse)
+```
+
+```{r}
+nhanes_accel <- read_csv("./data/nhanes_accel.csv") %>%
+  janitor::clean_names()
+```
+
+```{r}
+nhanes_covar <- read_csv("./data/nhanes_covar.csv", skip = 4)%>%
+ set_names(c("seqn", "sex", "age", "BMI", "education")) %>%
+
+mutate(
+    seqn = as.integer(seqn),
+    sex = factor(sex, levels = c(1, 2), labels = c("Male", "Female")),
+    age = as.numeric(age),
+    BMI = as.numeric(BMI),
+    education = factor(education, levels = c(1, 2, 3), labels = c("Less than     high school", "High school equivalent", "More than high school"))
+      ) %>%
+  filter(age >= 21) %>%
+  drop_na(sex, age, BMI, education)
+```
+
+```{r}
+merged_data <- nhanes_accel %>%
+  inner_join(nhanes_covar, by = "seqn")
+```
+
+## Produce a reader-friendly table for the number of men and women in each education category
+```{r}
+merged_data %>%
+  group_by(sex, education) %>%
+  summarize(count = n(), .groups = 'drop') %>%
+  pivot_wider(names_from = sex, values_from = count, values_fill = 0) %>%
+  knitr::kable()
+```
+Comments: 
+This table shows that both men and women in the dataset tend to have higher education levels, with the "More than high school" group having the highest representation for both genders. However, men are more prevalent in the "High school equivalent" category, while the "Less than high school" group shows an almost equal gender distribution. 
+
+## Create a visualization of the age distributions for men and women in each education category
+```{r}
+ggplot(merged_data, aes(x = education, y = age, fill = sex)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Age Distributions by Sex and Education Level",
+    x = "Education Level",
+    y = "Age",
+    fill = "Sex"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+Comments:
+Participants with less education tend to be older, with the "less than high school" group having the oldest participants on average. In contrast, the "more than high school" group includes younger participants. 
+
+In High School Equivalent,women in this group tend to be slightly older than men, with a median age closer to 60 for women and around 55 for men.Most women are of similar ages (closer to the median), while men show more variability.
+
+In More than High school, it shows the most diverse age distribution for both men and women. It suggests that people with more than a high school education come from a broad range of age groups.The median age for both men and women is around 41 years, indicating that the central tendency is similar for both genders in this education level.
+
