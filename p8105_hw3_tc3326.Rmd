@@ -23,6 +23,26 @@ na_summary
 ```
 This dataset contains `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Key variables include weather station id, date of observation,  (tenths of mm), precipitation (tenths of mm), snowfall (mm), snow depth (mm), and min and max daily temperature (tenths of degrees C). The dataset contains some significant missing data. There are 145,838 missing values for precipitation, 381,221 for snowfall, and 591,786 for snow depth. 
 
+## Data cleanning
+```{r}
+ny_noaa %>% 
+  count(snow) %>%
+  arrange(desc(n))
+
+ny_noaa = 
+  ny_noaa %>% 
+  separate(date, into = c("year", "month", "day"), convert = TRUE) %>% 
+  mutate(
+    tmax = as.numeric(tmax),
+    tmin = as.numeric(tmin))
+```
+Comment:
+
+0 mm snowfall is most common because snow is a seasonal occurrence. Most days throughout the year, particularly in non-winter months, do not see any snow.
+
+Missing data (NA) for snowfall is the second most common. It may result from days or stations where snowfall was not measured.
+
+25 mm, 13 mm, and 51 mm are the next most common values. Light snowfall events are more frequent than heavy snowstorms. Snowfall is often measured in the U.S. using inches, it's likely that these values were recorded as fractional inches and then converted to millimeters for consistency in this dataset. 
 
 # Problem 2
 
