@@ -44,6 +44,32 @@ Missing data (NA) for snowfall is the second most common. It may result from day
 
 25 mm, 13 mm, and 51 mm are the next most common values. Light snowfall events are more frequent than heavy snowstorms. Snowfall is often measured in the U.S. using inches, it's likely that these values were recorded as fractional inches and then converted to millimeters for consistency in this dataset. 
 
+## Make a two-panel plot showing the average max temperature in January and in July in each station across years. 
+```{r}
+average_max_tem_plot <- ny_noaa %>%
+  filter(month %in% c(1, 7)) %>%  
+  group_by(id, year, month) %>%
+  summarize(avg_tmax = mean(tmax, na.rm = TRUE), .groups = 'drop')  
+
+ggplot(average_max_tem_plot, aes(x = year, y = avg_tmax, color = id)) +
+  geom_line(alpha = 0.7) +  
+  facet_wrap(~ month) + 
+  labs(
+    title = "Average Maximum Temperature in January and July In Each Station Across Years",
+    x = "Year",
+    y = "Average Max Temperature (°C)",
+    color = "Station ID"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") 
+```
+Comments:
+
+In both January and July, most stations show a fairly stable trend in maximum temperatures across the years, with some fluctuations. The temperatures in January are generally much lower than in July, consistent with winter and summer temperatures. Overall the trends remain within a similar range for most stations within a month across the years. 
+
+Some extreme negative values (below -50°C) are present in the January panel.
+There is one noticeable outlier on July of 1988 and a few other outliers in July panel.
+
 # Problem 2
 
 ## Import and Organize data sets
